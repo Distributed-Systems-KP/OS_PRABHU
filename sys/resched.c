@@ -71,7 +71,7 @@ int resched() {
                 optr->present_in_epoch = 0;
             }
 
-            if (optr->pstate == PRCURR && !optr->present_in_epoch && optr->epoch == current_epoch && optr->counter > 0) {
+            if (optr->pstate == PRCURR && optr->present_in_epoch && optr->epoch == current_epoch && optr->counter > 0) {
                 runnable_in_epoch = 1;
             }
 
@@ -94,7 +94,7 @@ int resched() {
                     }
                 
                 }
-                kprintf("//A new era begins\\\\");
+                // kprintf("//A new era begins\\\\");
             }
 
             // STEP 3: Calculate the goodness value of all active processes
