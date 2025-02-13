@@ -1,0 +1,94 @@
+﻿ADDITIONAL QUESTIONS
+
+
+Prabhudatta Mishra
+pmishra4@ncsu.edu
+
+
+Question:01 What are the advantages and disadvantages of each of the two scheduling policies? Also, give the advantages and disadvantages of the round robin scheduling policy originally implemented in Xinu.
+
+
+
+
+Ans. 
+
+
+FOR AGING SCHEDULER:
+
+
+ADVANTAGES:
+
+
+1. It is a very simplistic approach, incrementing the priority of each process that existed in the ready queue so that the processes having low priority will eventually get higher priority whenever resched is called their priority increases by 2. So eventually after one of the resched calling, they can also get CPU time.
+2. This approach prevents starvation of low priority processes.
+3. If any process has equal priority the round robin approach can help providing opportunity for the processes to take up CPU time.
+
+
+
+
+DISADVANTAGES:
+1. Since all the processes are getting +2 whenever resched is called, there can be a situation where a low priority process can take over from a higher priority. For example, I am thinking of a situation where a higher priority process has entered into block state and multiple resched was called then the low priority process can have more priority than the previous high priority process.
+2. Increasing all the runnable process by equal weight doesn’t seem practical, since it shows that each process has got the same priority.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FOR LINUX SCHEDULER:
+
+
+Advantages:
+1. Creating epoch where all runnable processes gets some cpu time ensures fairness and prevents starvation.
+2. The carry over mechanism for the processes that went into blocked state can have extra CPU time based on the goodness value.
+3. This algorithm also prevents scheduling the freshly created processes to have CPU time in the current epoch before the already existing processes have got their quantum.
+
+
+Disadvantages:
+1. If a process having larger quantum will take up large CPU time in an epoch making other processes wait hence creating starvation. For example a process with pprio 90+
+2. Epoch and quantum creation and management for each process is complex.
+
+
+FOR XINU SCHEDULER:
+Advantages:
+1. It is a very simple approach that provides CPU time based on the basic priority of each process.
+2. Each process gets equal CPU time defined in the QUANTUM global variable.
+3. Provides fairness to each process.
+
+
+Disadvantages:
+1. The process does not allow other critical processes to preempt by yielding.
+2. There might be some processes that require more CPU time but are assigned with the fixed CPU time of QUANTUM.If a process has a lower priority but requires more CPU time it will have to wait more time to get into CPU.
+Question:02 Describe when each of the schedulers run the NULL process.
+
+
+Ans.
+IN AGING SCHEDULER:
+→ In an aging based scheduler, when there are no processes in the ready queue then the NULLPROC will be scheduled. Since it has 0 priority.
+
+
+IN LINUX SCHEDULER:
+→ In linux scheduler , when a new epoch starts and there is no process in the ready queue and the NULLPROC is currently running in the CPU. 
+
+
+IN XINU SCHEDULER:
+→ Quantum is scheduled at last when all higher priority processes( all processes having priority more than 0) has been scheduled.
+→ if there is any other process with 0 priority is inserted later, NULLPROC is scheduled first since it is FCFS.
+
+
+Question:03 Give two suggestions how the above mentioned aging based scheduler could be changed to attain better fairness keeping the fundamental point of incrementing the priority to be the same in your new ideas.
+
+
+Ans. 
+→ By adding a limit up to which we can increment the process by two upon each execution of resched, So that if a higher priority keeps on increasing then it will not starve other lower priorities.
+→ By maintaining a separate aging increment for each process along with the base priority we can increment the aging when a process waits and once it gets CPU time, the increment resets to zero, reverting the process back to the base priority.  So the scheduling is done based on both the aging parameter as well as the priority.
